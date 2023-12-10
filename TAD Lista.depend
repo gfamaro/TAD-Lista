@@ -1,0 +1,55 @@
+# depslib dependency file v1.0
+1701990663 source:c:\users\aluno.li1-150770\documents\aeds - gabriel amaro\tad lista\tad lista\lista.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"lista.h"
+
+1701989646 c:\users\aluno.li1-150770\documents\aeds - gabriel amaro\tad lista\tad lista\lista.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"lista.h"
+
+1701989665 source:c:\users\aluno.li1-150770\documents\aeds - gabriel amaro\tad lista\tad lista\main.c
+	<stdio.h>
+	<stdlib.h>
+	"interface.h"
+
+1701988005 c:\users\aluno.li1-150770\documents\aeds - gabriel amaro\tad lista\tad lista\interface.h
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+
+1701990576 source:c:\users\aluno.li1-150770\documents\aeds - gabriel amaro\tad lista\tad lista\interface.c
+	<stdio.h>
+	<stdlib.h>
+	"interface.h"
+
+1702134934 source:c:\users\55319\documents\tad lista\interface.c
+	<stdio.h>
+	<stdlib.h>
+	"interface.h"
+
+1702128741 c:\users\55319\documents\tad lista\interface.h
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+
+1702128741 c:\users\55319\documents\tad lista\lista.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"lista.h"
+
+1702135203 source:c:\users\55319\documents\tad lista\lista.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"lista.h"
+
+1702130941 source:c:\users\55319\documents\tad lista\main.c
+	<stdio.h>
+	<stdlib.h>
+	"interface.h"
+
