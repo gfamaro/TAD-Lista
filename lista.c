@@ -2,98 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// TIPO PRODUTO
-typedef struct {
-  int codigo;
-  char nome[20];
-  float preco;
-  char descricao[100];
-  int quantidade;
-} TProduto;
-
-// TIPO CÉLULA
-typedef struct celula{
-  TProduto item;
-  struct celula* prox;
-} TCelula;
-
-// TIPO LISTA
-typedef struct {
-  TCelula* primeiro;
-  TCelula* ultimo;
-  int tamanho;
-} TLista;
-
-// MÉTODOS
-void FLVazia(TLista* Lista);
-int verificaVazia(TLista Lista);
-
-void lerProduto(TProduto* produto);
-void inserir(TProduto x, TLista* Lista);
-void excluir(TLista* Lista, TProduto* Produto);
-void imprimir(TLista Lista);
-void imprimirProduto(TProduto x);
-TCelula* pesquisar(TLista Lista, TProduto x);
-TCelula* pesquisarPorNome(TLista Lista, TProduto Produto);
-
-int main() {
-  TLista lista1, lista2;
-  TProduto produto;
-
-  // criando as listas vazias
-  FLVazia(&lista1);
-  FLVazia(&lista2);
-
-  // verificando se a lista está vazia
-  if (!verificaVazia(lista1) && !verificaVazia(lista2)){
-    printf("ERRO!\n\n");
-    return 0;
-  }
-
-  for (int i = 1; i <= 10; i++){
-    printf("\nLISTA 1");
-    lerProduto(&produto);
-    inserir(produto, &lista1);
-
-    printf("\nLISTA 2");
-    lerProduto(&produto);
-    inserir(produto, &lista2);
-  }
-
-  printf("\nLISTA 1:");
-  imprimir(lista1);
-
-  printf("\nLISTA 2:");
-  imprimir(lista2);
-
-  produto = lista1.primeiro->prox->prox->prox->item;
-  excluir(&lista1, &produto);
-  produto = lista1.primeiro->prox->item;
-  excluir(&lista1, &produto);
-  produto = lista1.primeiro->prox->prox->item;
-  excluir(&lista1, &produto);
-  produto = lista1.primeiro->prox->item;
-  excluir(&lista1, &produto);
-
-  printf("\nLISTA 1:");
-  imprimir(lista1);
-
-  printf("\nLISTA 2:");
-  imprimir(lista2);
-
-  printf("\n=========== Pesquisar produto ===========");
-  getchar();
-  printf("\nNome: ");
-  fflush(stdin);
-  fgets(produto.nome, 20, stdin);
-  printf("=========================================\n");
-
-  TCelula *pesquisa = pesquisarPorNome(lista1, produto);
-  if (pesquisa != NULL)
-    imprimirProduto(pesquisa -> prox -> item);
-  else
-    printf("\nProduto nao cadastrado");
-}
+#include "lista.h"
 
 void lerProduto(TProduto* produto){
   printf("\n=========== Cadastrar produto ===========");
@@ -101,11 +10,11 @@ void lerProduto(TProduto* produto){
   fflush(stdin);
   scanf("%d", &produto -> codigo);
   getchar();
-          
+
   printf("Nome: ");
   fflush(stdin);
   fgets(produto -> nome, 20, stdin);
-          
+
   printf("Descricao: ");
   fflush(stdin);
   fgets(produto -> descricao, 100, stdin);
@@ -162,7 +71,7 @@ void imprimir(TLista Lista){
     printf("Codigo: %d\n", aux -> item.codigo);
     printf("Nome: %s", aux -> item.nome);
     printf("Descricao: %s", aux -> item.descricao);
-    printf("Preço: %.2f\n", aux -> item.preco);
+    printf("Preco: %.2f\n", aux -> item.preco);
     printf("Quantidade: %d\n", aux -> item.quantidade);
     printf("----------------------------------------\n");
 
@@ -175,7 +84,7 @@ void imprimirProduto(TProduto x){
   printf("Codigo: %d\n", x.codigo);
   printf("Nome: %s", x.nome);
   printf("Descricao: %s", x.descricao);
-  printf("Preço: %.2f\n", x.preco);
+  printf("Preco: %.2f\n", x.preco);
   printf("Quantidade: %d\n", x.quantidade);
   printf("----------------------------------------\n");
 }
@@ -198,4 +107,93 @@ TCelula* pesquisarPorNome(TLista Lista, TProduto x){
     aux = aux -> prox;
   }
   return NULL;
+}
+
+void liberarLista(TLista *Lista){
+  TCelula *aux;
+  while (!verificaVazia(*Lista)){
+    aux = Lista -> primeiro -> prox;
+    Lista -> primeiro -> prox = aux -> prox;
+    free(aux);
+
+    if (Lista -> primeiro -> prox == NULL)
+      Lista -> ultimo = Lista -> primeiro;
+
+    Lista -> tamanho--;
+  }
+}
+
+void atualizar(TLista *Lista, TProduto Item){
+  TCelula* aux = pesquisarPorNome(*Lista, Item);
+
+  if (aux != NULL ){
+    lerProduto(&Item);
+    aux -> prox -> item = Item;
+  } else
+    printf("Produto nao encontrado!");
+}
+
+void inserirCrescente(TLista *lista, TProduto x){
+    TCelula* aux1 = lista -> primeiro;
+    TCelula* aux2;
+
+    while (aux1 -> prox != NULL) {
+        int compStr = strcmp(x.nome, aux1 -> prox -> item.nome);
+
+        if (compStr > 0)
+            aux1 = aux1 -> prox;
+
+        else {
+            aux2 = (TCelula*) malloc(sizeof(TCelula));
+            aux2 -> item = x;
+            aux2 -> prox = aux1 -> prox;
+            aux1 -> prox = aux2;
+            lista -> tamanho++;
+
+            return;
+        }
+    }
+
+    inserir(x, lista);
+}
+
+int listasIguais(TLista lista1, TLista lista2){
+  TCelula *aux1 = lista1.primeiro;
+  TCelula *aux2 = lista2.primeiro;
+
+  if (lista1.tamanho != lista2.tamanho) {
+    return 0;
+  }
+
+  while (aux1 != NULL && aux2 != NULL) {
+    if (aux1->item.codigo != aux2->item.codigo) {
+      return 0;
+    }
+    if (strcmp(aux1->item.nome, aux2->item.nome) != 0) {
+      return 0;
+    }
+    if (strcmp(aux1->item.descricao, aux2->item.descricao) != 0) {
+      return 0;
+    }
+    if (aux1->item.preco != aux2->item.preco) {
+      return 0;
+    }
+    if (aux1->item.quantidade != aux2->item.quantidade) {
+      return 0;
+    }
+
+    aux1 = aux1->prox;
+    aux2 = aux2->prox;
+  }
+
+  return (aux1 == NULL && aux2 == NULL);
+}
+
+void concatenar(TLista *lista1, TLista lista2){
+    TCelula* aux = lista2.primeiro;
+
+    while (aux -> prox != NULL) {
+        inserir(aux -> prox -> item, lista1);
+        aux = aux -> prox;
+    }
 }
